@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#080810"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="LifeOS"/>
+<title>LifeOS ⚡</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:#080810;color:#e2e2f0;font-family:'Segoe UI',system-ui,sans-serif;max-width:520px;margin:0 auto;min-height:100vh;padding-bottom:76px;}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;}
+::-webkit-scrollbar{display:none;}
+.inp{width:100%;background:#10101e;border:1px solid #1e1e38;border-radius:10px;padding:11px 14px;color:#e2e2f0;font-size:14px;outline:none;margin-bottom:10px;display:block;}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-weight:700;font-size:14px;cursor:pointer;transition:opacity .15s;}
+.btn:active{opacity:.8;}
+.btn-gold{background:#d4a853;color:#08080f;}
+.btn-purple{background:#9b5de5;color:#fff;}
+.btn-orange{background:#f97316;color:#08080f;}
+.btn-ghost{background:transparent;border:1px solid #1e1e38;color:#5a5a7a;}
+.btn-sm{padding:7px 14px;font-size:12px;}
+.btn-full{width:100%;}
+.card{background:#14142a;border:1px solid #1e1e38;border-radius:14px;padding:16px;}
+.lbl{color:#5a5a7a;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;}
+.modal{background:#14142a;border:1px solid #1e1e38;border-radius:20px;padding:24px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.modal-title{color:#d4a853;font-size:18px;font-weight:700;}
+.modal-close{background:none;border:none;color:#5a5a7a;font-size:22px;}
+.hidden{display:none!important;}
+#header{background:linear-gradient(135deg,#10101e,#16102a);padding:14px 20px 10px;border-bottom:1px solid #1e1e38;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;background:#10101e;border-top:1px solid #1e1e38;display:flex;z-index:99;}
+.nav-btn{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;transition:background .15s;}
+.nav-btn.active{background:#2a2a48;}
+.nav-btn span:first-child{font-size:17px;}
+.nav-btn span:last-child{font-size:9px;color:#5a5a7a;}
+.nav-btn.active span:last-child{color:#d4a853;font-weight:700;}
+.tab{display:none;padding:16px;}
+.tab.active{display:block;}
+.badge{display:inline-block;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;}
+.photo-strip{display:flex;gap:4px;padding:10px 10px 0;overflow-x:auto;}
+.photo-strip img{width:70px;height:70px;object-fit:cover;border-radius:8px;flex-shrink:0;border:1px solid #2a2a48;}
+.progress-bar-bg{background:#2a2a48;border-radius:6px;height:8px;overflow:hidden;margin:10px 0;}
+.progress-bar{height:100%;border-radius:6px;background:linear-gradient(90deg,#f97316,#d4a853);transition:width .4s;}
+.dot-grid{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px;}
+.dot{width:10px;height:10px;border-radius:2px;}
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;}
+.photo-grid-item{border-radius:10px;overflow:hidden;border:1px solid #1e1e38;}
+.photo-grid-item img{width:100%;height:130px;object-fit:cover;display:block;}
+.photo-grid-item .date{padding:4px 8px;background:#10101e;color:#5a5a7a;font-size:10px;}
+.photo-gallery-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;}
+.photo-gallery-3>div{border-radius:10px;overflow:hidden;border:1px solid #1e1e38;position:relative;}
+.photo-gallery-3 img{width:100%;height:90px;object-fit:cover;display:block;}
+.photo-gallery-3 .cap{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));padding:4px 6px;font-size:9px;color:#fff;}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.ring-wrap .rl{font-size:12px;font-weight:700;color:#e2e2f0;text-align:center;}
+.ring-wrap .rs{font-size:10px;color:#5a5a7a;text-align:center;}
+.rings-row{display:flex;gap:16px;margin-top:20px;justify-content:space-around;}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.summary-card{background:#14142a;border:1px solid #1e1e38;border-radius:12px;padding:16px 14px;}
+.bar-chart{display:flex;gap:6px;align-items:flex-end;height:100px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bar-val{font-size:9px;color:#5a5a7a;}
+.bar-inner{width:100%;display:flex;align-items:flex-end;height:70px;justify-content:center;}
+.bar{width:80%;border-radius:4px 4px 0 0;transition:height .4s;}
+.bar-lbl{font-size:10px;color:#5a5a7a;}
+.pending-section{margin-bottom:16px;}
+.section-title{color:#5a5a7a;font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:8px;}
+.pending-item{background:#14142a;border:1px solid #1e1e38;border-radius:12px;padding:10px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
+.letter-card{background:#14142a;border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;}
+.letter-body{background:#10101e;border-radius:12px;padding:20px;color:#e2e2f0;font-size:15px;line-height:1.9;white-space:pre-wrap;border-left:3px solid #d4a853;}
+.hero-box{background:linear-gradient(135deg,#12122a,#1a0d2e);border-radius:18px;padding:22px 20px;margin-bottom:16px;border:1px solid #1e1e38;}
+.empty{text-align:center;color:#2a2a48;padding:50px 0;}
+.empty .emoji{font-size:48px;margin-bottom:12px;}
+.habit-row{border-radius:14px;margin-bottom:10px;overflow:hidden;}
+.habit-row.done{background:#0a180a;border:1px solid #2d5a2d;}
+.habit-row.pending{background:#14142a;border:1px solid #1e1e38;}
+.habit-body{padding:12px 14px;display:flex;align-items:center;gap:12px;}
+.check-btn{width:38px;height:38px;border-radius:50%;border:2px solid #2a2a48;background:none;font-size:17px;display:flex;align-items:center;justify-content:center;color:#2a2a48;flex-shrink:0;transition:all .2s;}
+.check-btn.done{background:#22c55e;border-color:#22c55e;color:#08080f;}
+.todo-row{background:#14142a;border:1px solid #1e1e38;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;}
+.todo-row.done-row{opacity:.55;}
+.todo-check{width:22px;height:22px;border-radius:5px;border:2px solid #d4a853;background:none;font-size:13px;margin-top:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#08080f;font-weight:900;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div>
+    <span style="color:#d4a853;font-weight:800;font-size:20px;letter-spacing:.5px">LifeOS ⚡</span>
+    <span id="header-tab" style="color:#5a5a7a;font-size:13px;margin-left:8px">· Home</span>
+  </div>
+  <div style="text-align:right">
+    <div id="header-habits" style="color:#22c55e;font-weight:700;font-size:14px">0/0 ✓</div>
+    <div style="color:#2a2a48;font-size:10px">today's habits</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div id="tab-home" class="tab active">
+  <div class="hero-box">
+    <div style="color:#5a5a7a;font-size:13px" id="greet-text"></div>
+    <div style="color:#d4a853;font-size:24px;font-weight:800;margin:2px 0">Dhruv 👋</div>
+    <div style="color:#5a5a7a;font-size:12px" id="today-date"></div>
+    <div class="rings-row" id="rings-row"></div>
+  </div>
+  <div id="home-content"></div>
+</div>
+
+<div id="tab-habits" class="tab">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <span style="color:#5a5a7a;font-size:13px" id="habits-count">0 habits</span>
+    <button class="btn btn-gold btn-sm" onclick="openModal('habit-modal')">+ New Habit</button>
+  </div>
+  <div id="habits-list"></div>
+</div>
+
+<div id="tab-todo" class="tab">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <span style="color:#5a5a7a;font-size:13px" id="todo-count">0 pending</span>
+    <button class="btn btn-purple btn-sm" onclick="openModal('todo-modal')">+ New Task</button>
+  </div>
+  <div id="todo-list"></div>
+</div>
+
+<div id="tab-challenge" class="tab">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <span style="color:#5a5a7a;font-size:13px" id="challenge-count">0 active</span>
+    <button class="btn btn-orange btn-sm" onclick="openModal('challenge-modal')">+ New Challenge</button>
+  </div>
+  <div id="challenge-list"></div>
+</div>
+
+<div id="tab-future" class="tab">
+  <div style="background:linear-gradient(135deg,#0d0a1f,#1a0d2e);border-radius:16px;padding:20px;margin-bottom:20px;border:1px solid #2a1a4a;text-align:center">
+    <div style="font-size:36px;margin-bottom:8px">💌</div>
+    <div style="color:#d4a853;font-weight:700;font-size:17px;margin-bottom:6px">Future Self ko Letter</div>
+    <div style="color:#5a5a7a;font-size:13px">Aaj ke sapne lock karo — future mein khulenge</div>
+  </div>
+  <button class="btn btn-gold btn-full" onclick="openModal('letter-modal')">✍️ Letter Likho</button>
+  <div style="height:20px"></div>
+  <div id="letters-list"></div>
+</div>
+
+<div id="tab-history" class="tab">
+  <div class="summary-grid" id="summary-grid"></div>
+  <div style="color:#5a5a7a;font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:12px">LAST 7 DAYS — HABITS</div>
+  <div class="bar-chart" id="bar-chart"></div>
+  <div style="height:24px"></div>
+  <div id="history-photos-section"></div>
+  <div style="color:#5a5a7a;font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:10px;margin-top:10px">✅ COMPLETED TASKS</div>
+  <div id="history-todos"></div>
+  <div id="history-challenges"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div id="nav">
+  <button class="nav-btn active" onclick="switchTab(0)"><span>🏠</span><span>Home</span></button>
+  <button class="nav-btn" onclick="switchTab(1)"><span>🔥</span><span>Habits</span></button>
+  <button class="nav-btn" onclick="switchTab(2)"><span>✅</span><span>Todo</span></button>
+  <button class="nav-btn" onclick="switchTab(3)"><span>⚔️</span><span>Challenge</span></button>
+  <button class="nav-btn" onclick="switchTab(4)"><span>💌</span><span>Future</span></button>
+  <button class="nav-btn" onclick="switchTab(5)"><span>📜</span><span>History</span></button>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- Habit Modal -->
+<div id="habit-modal" class="modal-bg hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Habit</div>
+      <button class="modal-close" onclick="closeModal('habit-modal')">✕</button>
+    </div>
+    <div class="lbl">Emoji</div>
+    <input class="inp" id="h-emoji" value="🌟" maxlength="2"/>
+    <div class="lbl">Habit Name</div>
+    <input class="inp" id="h-name" placeholder="e.g. Morning walk, 10 pages padho..."/>
+    <div class="lbl">Description (optional)</div>
+    <textarea class="inp" id="h-desc" rows="3" placeholder="Is habit ka maksad?" style="resize:vertical"></textarea>
+    <div class="lbl">Deadline (optional)</div>
+    <input class="inp" id="h-deadline" type="date"/>
+    <div class="lbl">Progress Photo (optional)</div>
+    <button class="inp" id="h-photo-btn" style="cursor:pointer;text-align:left;color:#5a5a7a" onclick="document.getElementById('h-photo-input').click()">
+      📷 Photos add karo (optional)
+    </button>
+    <input id="h-photo-input" type="file" accept="image/*" multiple class="hidden" onchange="handleHabitPhotos(this)"/>
+    <div id="h-photo-preview" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
+    <div class="lbl">Audio Note (optional)</div>
+    <button class="inp" id="h-audio-btn" style="cursor:pointer;text-align:left;color:#5a5a7a" onclick="document.getElementById('h-audio-input').click()">
+      🎵 Audio note upload karo (optional)
+    </button>
+    <input id="h-audio-input" type="file" accept="audio/*" class="hidden" onchange="handleHabitAudio(this)"/>
+    <div style="height:16px"></div>
+    <button class="btn btn-gold btn-full" onclick="addHabit()">🚀 Habit Add Karo</button>
+  </div>
+</div>
+
+<!-- Habit Detail Modal -->
+<div id="habit-detail-modal" class="modal-bg hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="detail-title">Habit</div>
+      <button class="modal-close" onclick="closeModal('habit-detail-modal')">✕</button>
+    </div>
+    <div id="detail-content"></div>
+    <div style="height:12px"></div>
+    <button class="btn btn-ghost btn-full" onclick="closeModal('habit-detail-modal')">Close</button>
+  </div>
+</div>
+
+<!-- Todo Modal -->
+<div id="todo-modal" class="modal-bg hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Task</div>
+      <button class="modal-close" onclick="closeModal('todo-modal')">✕</button>
+    </div>
+    <div class="lbl">Task kya hai?</div>
+    <input class="inp" id="t-text" placeholder="Likhao..."/>
+    <div class="lbl">Priority</div>
+    <select class="inp" id="t-priority">
+      <option value="high">🔴 High — zaruri hai</option>
+      <option value="medium" selected>🟡 Medium — hona chahiye</option>
+      <option value="low">🟢 Low — ho sake toh</option>
+    </select>
+    <div class="lbl">Deadline</div>
+    <input class="inp" id="t-deadline" type="date"/>
+    <button class="btn btn-purple btn-full" onclick="addTodo()">Add Task</button>
+  </div>
+</div>
+
+<!-- Challenge Modal -->
+<div id="challenge-modal" class="modal-bg hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Hard Challenge</div>
+      <button class="modal-close" onclick="closeModal('challenge-modal')">✕</button>
+    </div>
+    <div class="lbl">Challenge Name</div>
+    <input class="inp" id="c-name" placeholder="e.g. 75 Hard, No Sugar 30 Days..."/>
+    <div class="lbl">Total Days</div>
+    <input class="inp" id="c-days" type="number" value="30" min="1" max="365"/>
+    <div class="lbl">Rules / Description</div>
+    <textarea class="inp" id="c-desc" rows="3" placeholder="Rules ya motivation..." style="resize:vertical"></textarea>
+    <div class="lbl">Deadline (optional)</div>
+    <input class="inp" id="c-deadline" type="date"/>
+    <button class="btn btn-orange btn-full" onclick="addChallenge()">⚔️ Start Challenge</button>
+  </div>
+</div>
+
+<!-- Letter Modal -->
+<div id="letter-modal" class="modal-bg hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✍️ Future Self ko Letter</div>
+      <button class="modal-close" onclick="closeModal('letter-modal')">✕</button>
+    </div>
+    <div class="lbl">Title</div>
+    <input class="inp" id="l-title" placeholder="Ek saal baad ka sapna..."/>
+    <div class="lbl">Letter likho</div>
+    <textarea class="inp" id="l-message" rows="8" placeholder="Dear future me,&#10;&#10;Aaj main soch raha hoon ki..." style="resize:vertical;line-height:1.7"></textarea>
+    <div class="lbl">Mood aaj</div>
+    <select class="inp" id="l-mood">
+      <option>hopeful 🌅</option>
+      <option>determined 🔥</option>
+      <option>peaceful 🌿</option>
+      <option>bold ⚡</option>
+      <option>grateful 🙏</option>
+      <option>sad 😔</option>
+      <option>excited 🚀</option>
+    </select>
+    <div class="lbl">🔐 Lock Deadline</div>
+    <input class="inp" id="l-deadline" type="date"/>
+    <div style="color:#5a5a7a;font-size:11px;margin-top:-6px;margin-bottom:14px">Is date se pehle nahi khulega letter</div>
+    <button class="btn btn-gold btn-full" onclick="addLetter()">💌 Seal & Save Karo</button>
+  </div>
+</div>
+
+<!-- Letter View Modal -->
+<div id="letter-view-modal" class="modal-bg hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">💌 Past You ka Letter</div>
+      <button class="modal-close" onclick="closeModal('letter-view-modal')">✕</button>
+    </div>
+    <div id="letter-view-meta" style="color:#5a5a7a;font-size:12px;margin-bottom:16px"></div>
+    <div id="letter-view-body" class="letter-body"></div>
+    <div style="height:16px"></div>
+    <button class="btn btn-ghost btn-full" onclick="closeModal('letter-view-modal')">Close</button>
+  </div>
+</div>
+
+<script>
+// ─── State ────────────────────────────────────────────────────────────────────
+const SK = {habits:'lo_h',todos:'lo_t',challenges:'lo_c',letters:'lo_l',logs:'lo_lg'};
+let habits=[], todos=[], challenges=[], letters=[], logs=[];
+let tempPhotos=[], tempAudio=null;
+let currentTab=0;
+
+const TAB_NAMES=['Home','Habits','Todo','Challenge','Future Me','History'];
+const TABS=['home','habits','todo','challenge','future','history'];
+
+function ls(k){try{return JSON.parse(localStorage.getItem(k))||[];}catch{return[];}}
+function ss(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function today(){return new Date().toISOString().split('T')[0];}
+function daysLeft(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/86400000);}
+function deadlineBadge(deadline){
+  if(!deadline)return '';
+  const dl=daysLeft(deadline);
+  const color=dl<0?'#ef4444':dl===0?'#ef4444':dl<=3?'#f97316':dl<=7?'#d4a853':'#22c55e';
+  const label=dl<0?`${Math.abs(dl)}d over`:dl===0?'Today!':`${dl}d left`;
+  return `<span class="badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${label}</span>`;
+}
+function greet(){const h=new Date().getHours();return h<12?'Good Morning 🌅':h<17?'Good Afternoon ☀️':h<20?'Good Evening 🌆':'Good Night 🌙';}
+function pColor(p){return{high:'#ef4444',medium:'#d4a853',low:'#22c55e'}[p]||'#d4a853';}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+function init(){
+  habits=ls(SK.habits); todos=ls(SK.todos);
+  challenges=ls(SK.challenges); letters=ls(SK.letters);
+  logs=ls(SK.logs);
+  renderAll();
+}
+
+function renderAll(){
+  renderHeader();
+  if(currentTab===0) renderHome();
+  else if(currentTab===1) renderHabits();
+  else if(currentTab===2) renderTodos();
+  else if(currentTab===3) renderChallenges();
+  else if(currentTab===4) renderLetters();
+  else if(currentTab===5) renderHistory();
+}
+
+// ─── Tab Switch ───────────────────────────────────────────────────────────────
+function switchTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  document.querySelectorAll('.nav-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+  document.getElementById('header-tab').textContent='· '+TAB_NAMES[i];
+  currentTab=i; renderAll();
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────────
+function renderHeader(){
+  const t=today();
+  const done=habits.filter(h=>logs.includes(`${h.id}_${t}`)).length;
+  document.getElementById('header-habits').textContent=`${done}/${habits.length} ✓`;
+}
+
+// ─── HOME ─────────────────────────────────────────────────────────────────────
+function renderHome(){
+  document.getElementById('greet-text').textContent=greet();
+  document.getElementById('today-date').textContent=new Date().toLocaleDateString('hi-IN',{weekday:'long',day:'numeric',month:'long'});
+  const t=today();
+  const habitsDone=habits.filter(h=>logs.includes(`${h.id}_${t}`)).length;
+  const habitPct=habits.length?Math.round(habitsDone/habits.length*100):0;
+  const todoDone=todos.filter(x=>x.done).length;
+  const todoPct=todos.length?Math.round(todoDone/todos.length*100):0;
+  const activeC=challenges.filter(c=>c.logs.length<c.totalDays);
+  const challPct=activeC.length?Math.round(activeC.reduce((s,c)=>s+(c.logs.length/c.totalDays*100),0)/activeC.length):0;
+
+  document.getElementById('rings-row').innerHTML=`
+    ${ring(habitPct,'#22c55e',`${habitsDone}/${habits.length}`,'Habits')}
+    ${ring(todoPct,'#9b5de5',`${todos.filter(x=>!x.done).length} left`,'Tasks')}
+    ${ring(challPct,'#f97316',`${activeC.length}`,'Challenges')}`;
+
+  const pendingHabits=habits.filter(h=>!logs.includes(`${h.id}_${t}`));
+  const pendingTodos=todos.filter(x=>!x.done).sort((a,b)=>{
+    const dl=d=>d?new Date(d):new Date('9999'); return dl(a.deadline)-dl(b.deadline);
+  });
+  const pendingC=activeC.filter(c=>!c.logs.includes(t));
+
+  let html='';
+  if(pendingHabits.length){
+    html+=`<div class="pending-section"><div class="section-title">🔥 AAJ KI HABITS PENDING (${pendingHabits.length})</div>`;
+    pendingHabits.forEach(h=>{
+      html+=`<div class="pending-item">
+        <span style="color:#e2e2f0;font-size:13px">${h.emoji||'🔥'} ${h.name}</span>
+        <div style="display:flex;gap:6px;align-items:center">${deadlineBadge(h.deadline)}<span class="badge" style="background:#22c55e15;color:#22c55e">habit</span></div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+  if(pendingTodos.length){
+    html+=`<div class="pending-section"><div class="section-title">✅ TASKS (${pendingTodos.length})</div>`;
+    pendingTodos.slice(0,6).forEach(t=>{
+      const pc=pColor(t.priority);
+      html+=`<div class="pending-item">
+        <div><div style="color:#e2e2f0;font-size:13px">${t.text}</div><div style="color:${pc};font-size:10px;margin-top:2px">● ${t.priority}</div></div>
+        <div>${deadlineBadge(t.deadline)}</div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+  if(pendingC.length){
+    html+=`<div class="pending-section"><div class="section-title">⚔️ CHALLENGES — CHECK-IN BAAKI (${pendingC.length})</div>`;
+    pendingC.forEach(c=>{
+      const pct=Math.round(c.logs.length/c.totalDays*100);
+      html+=`<div class="card" style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="color:#e2e2f0;font-size:13px">⚔️ ${c.name}</span>
+          <div style="display:flex;gap:8px;align-items:center">${deadlineBadge(c.deadline)}<span style="color:#f97316;font-size:12px;font-weight:700">${c.logs.length}/${c.totalDays}d</span></div>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar" style="width:${pct}%"></div></div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+  if(!pendingHabits.length&&!pendingTodos.length&&!pendingC.length){
+    html=`<div class="empty"><div class="emoji">🎉</div><div style="color:#5a5a7a">Sab kaam ho gaya! Kamal ka din!</div></div>`;
+  }
+  document.getElementById('home-content').innerHTML=html;
+}
+
+function ring(pct,color,label,sub){
+  const r=20,circ=2*Math.PI*r,dash=circ*(Math.min(pct,100)/100),size=56;
+  return `<div class="ring-wrap">
+    <svg width="${size}" height="${size}" style="transform:rotate(-90deg)">
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#2a2a48" stroke-width="5"/>
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="5"
+        stroke-dasharray="${dash} ${circ}" stroke-linecap="round"/>
+    </svg>
+    <div class="rl">${label}</div><div class="rs">${sub}</div>
+  </div>`;
+}
+
+// ─── HABITS ───────────────────────────────────────────────────────────────────
+let pendingHabitPhotos=[], pendingHabitAudio=null;
+
+async function handleHabitPhotos(input){
+  const files=[...input.files];
+  for(const f of files){
+    if(!f.type.startsWith('image/')) continue;
+    const data=await readFile(f);
+    pendingHabitPhotos.push({id:uid(),data,date:today()});
+  }
+  document.getElementById('h-photo-btn').textContent=`📷 ${pendingHabitPhotos.length} photos chosen ✓`;
+  const prev=document.getElementById('h-photo-preview');
+  prev.innerHTML=pendingHabitPhotos.map(p=>`<img src="${p.data}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid #2a2a48"/>`).join('');
+}
+
+async function handleHabitAudio(input){
+  if(!input.files[0]) return;
+  pendingHabitAudio=await readFile(input.files[0]);
+  document.getElementById('h-audio-btn').textContent='🎵 Audio chosen ✓';
+}
+
+function readFile(f){
+  return new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(f);});
+}
+
+function addHabit(){
+  const name=document.getElementById('h-name').value.trim();
+  if(!name){alert('Habit name daalo!');return;}
+  const h={id:uid(),name,emoji:document.getElementById('h-emoji').value||'🌟',
+    desc:document.getElementById('h-desc').value,
+    deadline:document.getElementById('h-deadline').value,
+    photos:pendingHabitPhotos,audio:pendingHabitAudio,createdAt:today()};
+  habits.push(h); ss(SK.habits,habits);
+  pendingHabitPhotos=[]; pendingHabitAudio=null;
+  document.getElementById('h-name').value=''; document.getElementById('h-emoji').value='🌟';
+  document.getElementById('h-desc').value=''; document.getElementById('h-deadline').value='';
+  document.getElementById('h-photo-btn').textContent='📷 Photos add karo (optional)';
+  document.getElementById('h-audio-btn').textContent='🎵 Audio note upload karo (optional)';
+  document.getElementById('h-photo-preview').innerHTML='';
+  closeModal('habit-modal'); renderAll();
+}
+
+function toggleLog(hid){
+  const key=`${hid}_${today()}`;
+  const idx=logs.indexOf(key);
+  if(idx>-1) logs.splice(idx,1); else logs.push(key);
+  ss(SK.logs,logs); renderAll();
+}
+
+function deleteHabit(id){
+  if(!confirm('Yeh habit delete karein?')) return;
+  habits=habits.filter(h=>h.id!==id); ss(SK.habits,habits); renderAll();
+}
+
+function addPhotoToHabit(id){
+  const inp=document.createElement('input');
+  inp.type='file'; inp.accept='image/*'; inp.multiple=true;
+  inp.onchange=async()=>{
+    const h=habits.find(x=>x.id===id); if(!h) return;
+    for(const f of [...inp.files]){
+      if(!f.type.startsWith('image/')) continue;
+      const data=await readFile(f);
+      h.photos=h.photos||[]; h.photos.push({id:uid(),data,date:today()});
+    }
+    ss(SK.habits,habits); renderAll();
+  };
+  inp.click();
+}
+
+function openHabitDetail(id){
+  const h=habits.find(x=>x.id===id); if(!h) return;
+  document.getElementById('detail-title').textContent=`${h.emoji||''} ${h.name}`;
+  let html='';
+  if(h.desc) html+=`<p style="color:#5a5a7a;font-size:13px;line-height:1.6;margin-bottom:14px">${h.desc}</p>`;
+  if(h.deadline) html+=`<div style="display:flex;gap:10px;align-items:center;margin-bottom:14px"><span style="color:#5a5a7a;font-size:12px">📅 Deadline:</span>${deadlineBadge(h.deadline)}<span style="color:#5a5a7a;font-size:12px">${h.deadline}</span></div>`;
+  if(h.audio) html+=`<div class="lbl" style="margin-bottom:6px">🎵 Audio Note</div><audio controls src="${h.audio}" style="width:100%;margin-bottom:16px"></audio>`;
+  html+=`<div class="lbl">📷 Progress Photos (${(h.photos||[]).length})</div>`;
+  if(h.photos&&h.photos.length){
+    html+=`<div class="photo-grid">`;
+    h.photos.forEach(p=>{
+      html+=`<div class="photo-grid-item"><img src="${p.data}" alt=""/><div class="date">${p.date}</div></div>`;
+    });
+    html+=`</div>`;
+  } else {
+    html+=`<div style="color:#2a2a48;font-size:13px;padding:16px 0">Koi photo nahi abhi tak. 📷 button se daalo!</div>`;
+  }
+  document.getElementById('detail-content').innerHTML=html;
+  openModal('habit-detail-modal');
+}
+
+function getStreak(hid){
+  let s=0,d=new Date();
+  while(logs.includes(`${hid}_${d.toISOString().split('T')[0]}`)){s++;d.setDate(d.getDate()-1);}
+  return s;
+}
+
+function renderHabits(){
+  const t=today();
+  document.getElementById('habits-count').textContent=`${habits.length} habits`;
+  if(!habits.length){
+    document.getElementById('habits-list').innerHTML=`<div class="empty"><div class="emoji">🌱</div><div>Koi habit nahi. Shuru karo!</div></div>`;
+    return;
+  }
+  let html='';
+  habits.forEach(h=>{
+    const done=logs.includes(`${h.id}_${t}`);
+    const streak=getStreak(h.id);
+    const photos=h.photos||[];
+    html+=`<div class="habit-row ${done?'done':'pending'}">`;
+    if(photos.length){
+      html+=`<div class="photo-strip">${photos.slice(-5).map(p=>`<img src="${p.data}" alt=""/>`).join('')}</div>`;
+    }
+    html+=`<div class="habit-body">
+      <button class="check-btn ${done?'done':''}" onclick="toggleLog('${h.id}')">${done?'✓':''}</button>
+      <div style="flex:1;cursor:pointer" onclick="openHabitDetail('${h.id}')">
+        <div style="color:${done?'#22c55e':'#e2e2f0'};font-weight:600">${h.emoji||'🔥'} ${h.name}</div>
+        <div style="color:#5a5a7a;font-size:11px;margin-top:4px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <span>🔥 ${streak} streak</span>
+          ${deadlineBadge(h.deadline)}
+          ${photos.length?`<span>📷 ${photos.length} photos</span>`:''}
+          ${h.audio?'<span>🎵 note</span>':''}
+        </div>
+      </div>
+      <button onclick="addPhotoToHabit('${h.id}')" style="background:none;border:none;color:#5a5a7a;font-size:20px;padding:4px">📷</button>
+      <button onclick="deleteHabit('${h.id}')" style="background:none;border:none;color:#2a2a48;font-size:16px;padding:4px">🗑</button>
+    </div></div>`;
+  });
+  document.getElementById('habits-list').innerHTML=html;
+}
+
+// ─── TODO ─────────────────────────────────────────────────────────────────────
+function addTodo(){
+  const text=document.getElementById('t-text').value.trim();
+  if(!text){alert('Task likhao!');return;}
+  todos.unshift({id:uid(),text,priority:document.getElementById('t-priority').value,
+    deadline:document.getElementById('t-deadline').value,done:false,createdAt:today()});
+  ss(SK.todos,todos);
+  document.getElementById('t-text').value=''; document.getElementById('t-deadline').value='';
+  closeModal('todo-modal'); renderAll();
+}
+
+function toggleTodo(id){
+  const t=todos.find(x=>x.id===id); if(t) t.done=!t.done;
+  ss(SK.todos,todos); renderAll();
+}
+
+function deleteTodo(id){
+  todos=todos.filter(t=>t.id!==id); ss(SK.todos,todos); renderAll();
+}
+
+function renderTodos(){
+  const pending=todos.filter(t=>!t.done).sort((a,b)=>{
+    const dl=d=>d?new Date(d):new Date('9999'); return dl(a.deadline)-dl(b.deadline);
+  });
+  const done=todos.filter(t=>t.done);
+  document.getElementById('todo-count').textContent=`${pending.length} pending`;
+  if(!todos.length){
+    document.getElementById('todo-list').innerHTML=`<div class="empty"><div class="emoji">✅</div><div>Sab clear hai!</div></div>`;
+    return;
+  }
+  let html='';
+  [...pending,...done].forEach(t=>{
+    const pc=pColor(t.priority);
+    html+=`<div class="todo-row${t.done?' done-row':''}">
+      <button class="todo-check" style="border-color:${pc};background:${t.done?pc:'none'}" onclick="toggleTodo('${t.id}')">${t.done?'✓':''}</button>
+      <div style="flex:1">
+        <div style="color:${t.done?'#5a5a7a':'#e2e2f0'};text-decoration:${t.done?'line-through':'none'};font-size:14px">${t.text}</div>
+        <div style="display:flex;gap:8px;margin-top:5px;flex-wrap:wrap;align-items:center">
+          <span style="color:${pc};font-size:11px;font-weight:600">● ${t.priority}</span>
+          ${deadlineBadge(t.deadline)}
+          <span style="color:#2a2a48;font-size:10px">${t.createdAt}</span>
+        </div>
+      </div>
+      <button onclick="deleteTodo('${t.id}')" style="background:none;border:none;color:#2a2a48;font-size:15px">✕</button>
+    </div>`;
+  });
+  document.getElementById('todo-list').innerHTML=html;
+}
+
+// ─── CHALLENGE ────────────────────────────────────────────────────────────────
+function addChallenge(){
+  const name=document.getElementById('c-name').value.trim();
+  if(!name){alert('Challenge name daalo!');return;}
+  challenges.unshift({id:uid(),name,totalDays:parseInt(document.getElementById('c-days').value)||30,
+    desc:document.getElementById('c-desc').value,
+    deadline:document.getElementById('c-deadline').value,
+    startDate:today(),logs:[]});
+  ss(SK.challenges,challenges);
+  document.getElementById('c-name').value=''; document.getElementById('c-desc').value='';
+  document.getElementById('c-days').value=30; document.getElementById('c-deadline').value='';
+  closeModal('challenge-modal'); renderAll();
+}
+
+function checkInChallenge(id){
+  const t=today();
+  const c=challenges.find(x=>x.id===id);
+  if(c&&!c.logs.includes(t)) c.logs.push(t);
+  ss(SK.challenges,challenges); renderAll();
+}
+
+function deleteChallenge(id){
+  if(!confirm('Yeh challenge delete karein?')) return;
+  challenges=challenges.filter(c=>c.id!==id); ss(SK.challenges,challenges); renderAll();
+}
+
+function renderChallenges(){
+  const active=challenges.filter(c=>c.logs.length<c.totalDays);
+  document.getElementById('challenge-count').textContent=`${active.length} active`;
+  if(!challenges.length){
+    document.getElementById('challenge-list').innerHTML=`<div class="empty"><div class="emoji">⚔️</div><div>Koi challenge nahi. Apne aap ko test karo!</div></div>`;
+    return;
+  }
+  const t=today();
+  let html='';
+  challenges.forEach(c=>{
+    const pct=Math.round((c.logs.length/c.totalDays)*100);
+    const done=c.logs.includes(t);
+    const finished=c.logs.length>=c.totalDays;
+    const remaining=c.totalDays-c.logs.length;
+    let dots='';
+    for(let i=0;i<c.totalDays;i++){
+      const d=new Date(c.startDate); d.setDate(d.getDate()+i);
+      const key=d.toISOString().split('T')[0];
+      dots+=`<div class="dot" style="background:${c.logs.includes(key)?'#f97316':'#2a2a48'}"></div>`;
+    }
+    html+=`<div class="card" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div style="flex:1">
+          <div style="color:#f97316;font-weight:700;font-size:16px">⚔️ ${c.name}</div>
+          ${c.desc?`<div style="color:#5a5a7a;font-size:12px;margin-top:4px">${c.desc}</div>`:''}
+          <div style="margin-top:6px">${deadlineBadge(c.deadline)}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="color:#f97316;font-weight:800;font-size:24px">${c.logs.length}<span style="color:#5a5a7a;font-size:14px">/${c.totalDays}</span></div>
+          <div style="color:#5a5a7a;font-size:10px">days done</div>
+        </div>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar" style="width:${pct}%"></div></div>
+      <div class="dot-grid">${dots}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="color:#5a5a7a;font-size:12px">${finished?'🏆 Completed!':done?`✓ Done! ${remaining} bacha`:`${remaining}d remaining`}</span>
+        <div style="display:flex;gap:8px">
+          ${!done&&!finished?`<button class="btn btn-orange btn-sm" onclick="checkInChallenge('${c.id}')">✓ Check-in</button>`:''}
+          <button onclick="deleteChallenge('${c.id}')" style="background:none;border:none;color:#2a2a48;font-size:16px">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('challenge-list').innerHTML=html;
+}
+
+// ─── LETTERS ──────────────────────────────────────────────────────────────────
+function addLetter(){
+  const msg=document.getElementById('l-message').value.trim();
+  if(!msg){alert('Letter likho!');return;}
+  letters.unshift({id:uid(),title:document.getElementById('l-title').value,
+    message:msg,deadline:document.getElementById('l-deadline').value,
+    mood:document.getElementById('l-mood').value,
+    createdAt:new Date().toISOString(),opened:false});
+  ss(SK.letters,letters);
+  document.getElementById('l-title').value=''; document.getElementById('l-message').value='';
+  document.getElementById('l-deadline').value='';
+  closeModal('letter-modal'); renderAll();
+}
+
+function openLetter(id){
+  const l=letters.find(x=>x.id===id); if(!l) return;
+  if(l.deadline&&new Date()<new Date(l.deadline)){
+    const dl=daysLeft(l.deadline);
+    alert(`🔐 Yeh letter locked hai!\n\n${dl} din baad khulega.\nDeadline: ${l.deadline}\n\nSabar rakho! 💪`);
+    return;
+  }
+  if(!l.opened){l.opened=true; ss(SK.letters,letters);}
+  document.getElementById('letter-view-meta').textContent=
+    `${new Date(l.createdAt).toLocaleDateString('hi-IN',{dateStyle:'full'})} · ${l.mood}`;
+  document.getElementById('letter-view-body').textContent=l.message;
+  openModal('letter-view-modal');
+  renderLetters();
+}
+
+function deleteLetter(id,e){
+  e.stopPropagation();
+  if(!confirm('Letter delete karein?')) return;
+  letters=letters.filter(l=>l.id!==id); ss(SK.letters,letters); renderLetters();
+}
+
+function renderLetters(){
+  if(!letters.length){
+    document.getElementById('letters-list').innerHTML=`<div class="empty" style="padding:30px 0"><div>Koi letter nahi abhi tak.</div></div>`;
+    return;
+  }
+  let html='';
+  letters.forEach(l=>{
+    const locked=l.deadline&&new Date()<new Date(l.deadline);
+    const dl=locked?daysLeft(l.deadline):null;
+    const borderColor=locked?'#4a2a6a':l.opened?'#1a3a1a':'#1e1e38';
+    const titleColor=locked?'#9b5de5':l.opened?'#22c55e':'#d4a853';
+    const icon=locked?'🔐':l.opened?'📖':'💌';
+    html+=`<div class="letter-card" style="border:1px solid ${borderColor}" onclick="openLetter('${l.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1">
+          <div style="color:${titleColor};font-weight:600;font-size:14px">${icon} ${l.title||'Letter to Future Me'}</div>
+          <div style="color:#5a5a7a;font-size:11px;margin-top:5px;display:flex;gap:10px;flex-wrap:wrap">
+            <span>${new Date(l.createdAt).toLocaleDateString('hi-IN')}</span>
+            <span>${l.mood}</span>
+            ${locked?`<span style="color:#9b5de5">🔒 ${dl}d mein khulega</span>`:''}
+          </div>
+        </div>
+        <button onclick="deleteLetter('${l.id}',event)" style="background:none;border:none;color:#2a2a48;font-size:15px">🗑</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('letters-list').innerHTML=html;
+}
+
+// ─── HISTORY ──────────────────────────────────────────────────────────────────
+function renderHistory(){
+  const allPhotos=habits.flatMap(h=>(h.photos||[]).map(p=>({...p,habit:h.name,emoji:h.emoji||'🔥'})));
+  const completedTodos=todos.filter(t=>t.done);
+  const completedC=challenges.filter(c=>c.logs.length>=c.totalDays);
+
+  document.getElementById('summary-grid').innerHTML=[
+    {icon:'🔥',val:habits.length,label:'Total Habits',color:'#22c55e'},
+    {icon:'✅',val:completedTodos.length,label:'Tasks Done',color:'#9b5de5'},
+    {icon:'⚔️',val:challenges.length,label:'Challenges',color:'#f97316'},
+    {icon:'📷',val:allPhotos.length,label:'Progress Photos',color:'#d4a853'},
+  ].map(s=>`<div class="summary-card"><div style="font-size:24px">${s.icon}</div><div style="color:${s.color};font-weight:800;font-size:22px;margin-top:6px">${s.val}</div><div style="color:#5a5a7a;font-size:11px;margin-top:2px">${s.label}</div></div>`).join('');
+
+  const last7=Array.from({length:7},(_,i)=>{
+    const d=new Date(); d.setDate(d.getDate()-(6-i));
+    const key=d.toISOString().split('T')[0];
+    const count=habits.filter(h=>logs.includes(`${h.id}_${key}`)).length;
+    return{key,label:d.toLocaleDateString('en',{weekday:'short'}),count,total:habits.length};
+  });
+  document.getElementById('bar-chart').innerHTML=last7.map(d=>{
+    const pct=d.total>0?d.count/d.total:0;
+    const color=pct>.7?'#22c55e':pct>.3?'#d4a853':'#2a2a48';
+    return `<div class="bar-col">
+      <div class="bar-val">${d.count}/${d.total}</div>
+      <div class="bar-inner"><div class="bar" style="height:${Math.max(pct*100,5)}%;background:${color}"></div></div>
+      <div class="bar-lbl">${d.label}</div>
+    </div>`;
+  }).join('');
+
+  if(allPhotos.length){
+    document.getElementById('history-photos-section').innerHTML=`
+      <div style="color:#5a5a7a;font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:12px">📷 ALL PROGRESS PHOTOS</div>
+      <div class="photo-gallery-3">${allPhotos.map(p=>`<div><img src="${p.data}" alt=""/><div class="cap">${p.emoji} ${p.habit}</div></div>`).join('')}</div>
+      <div style="height:24px"></div>`;
+  } else document.getElementById('history-photos-section').innerHTML='';
+
+  document.getElementById('history-todos').innerHTML=
+    completedTodos.length
+    ? completedTodos.slice(0,15).map(t=>`<div style="color:#5a5a7a;font-size:13px;padding:7px 0;border-bottom:1px solid #2a2a48;display:flex;justify-content:space-between"><span>✓ ${t.text}</span><span style="color:#2a2a48;font-size:10px;flex-shrink:0;margin-left:8px">${t.createdAt}</span></div>`).join('')
+    : '<p style="color:#2a2a48;font-size:13px">Abhi tak koi task complete nahi hua.</p>';
+
+  document.getElementById('history-challenges').innerHTML=completedC.length?`
+    <div style="color:#5a5a7a;font-size:11px;font-weight:700;letter-spacing:.5px;margin:20px 0 10px">🏆 COMPLETED CHALLENGES</div>
+    ${completedC.map(c=>`<div style="color:#f97316;font-size:14px;padding:6px 0">🏆 ${c.name} — ${c.totalDays} days</div>`).join('')}`:'';
+}
+
+// ─── Modal helpers ────────────────────────────────────────────────────────────
+function openModal(id){ document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+document.querySelectorAll('.modal-bg').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.add('hidden'); });
+});
+
+// ─── Start ────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
